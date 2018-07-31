@@ -97,12 +97,6 @@
 #include <iostream>
 #include <vector>
 #include <iterator>
-#include <string>
-#include "utils.h"
-#include <stdio.h>
-#include <iostream>
-#include <boost/algorithm/string/classification.hpp>
-#include <boost/algorithm/string/split.hpp>
 
 using namespace std;
 
@@ -305,13 +299,13 @@ void modifyEnergyBands(std::vector< Flima::Pointer >  &energyBandsSource,
             }
 //        }
 
-        // std::cout<<"band "<<e<<std::endl;
+        std::cout<<"band "<<e<<std::endl;
 
-        // std::cout<<"meanSource "<<meanSource<<std::endl;
-        // std::cout<<"stdSource "<<stdSource<<std::endl;
+        std::cout<<"meanSource "<<meanSource<<std::endl;
+        std::cout<<"stdSource "<<stdSource<<std::endl;
 
-        // std::cout<<"meanTarget "<<meanTarget<<std::endl;
-        // std::cout<<"stdTarget "<<stdTarget<<std::endl;
+        std::cout<<"meanTarget "<<meanTarget<<std::endl;
+        std::cout<<"stdTarget "<<stdTarget<<std::endl;
     }
 }
 
@@ -367,7 +361,7 @@ void getmask(ImageType::Pointer const &imageGrey, ImageType::Pointer &mask){
 
 
 
-void matchingTwoImages(const string outname, ImageType::Pointer &imageSouce, ImageType::Pointer  &imageTarget){
+void matchingTwoImages(ImageType::Pointer &imageSouce, ImageType::Pointer  &imageTarget){
 
     auto normImg = imageSouce;
 
@@ -386,7 +380,7 @@ void matchingTwoImages(const string outname, ImageType::Pointer &imageSouce, Ima
 
     ImageType::SizeType sizeSource = imageSouce->GetLargestPossibleRegion().GetSize();
 
-    // std::cout<<"sizeSource haha "<<sizeSource<<std::endl;
+    std::cout<<"sizeSource haha "<<sizeSource<<std::endl;
 
     getmask(imageSouce, maskSource);
 
@@ -508,7 +502,7 @@ void matchingTwoImages(const string outname, ImageType::Pointer &imageSouce, Ima
 
     //using WriterType = itk::ImageFileWriter< ImageType  >;
     //WriterType::Pointer writer = WriterType::New();
-    writer->SetFileName(outname); //normalization后的图片
+    writer->SetFileName("test.png");
     writer->SetInput(normImg);
 
     /*try
@@ -599,16 +593,7 @@ int main(int argc,char *argv[])
 
     string imageFileNameSource=string(argv[1]);
     string imageFileNameTarget=string(argv[2]);
-    //rzx--Batch processing
-    string outpath="/data/DDSM/firstpeople/normalization_2/";
-    vector<string> filename;
-    boost::split( filename, imageFileNameSource, boost::is_any_of( "\\/" ), boost::token_compress_on );//如果此处使用boost::token_compress_off
-    string name;
-    name = filename[5];
-    string str = ".png";
-    string outname = outpath+name+str;
-    std::cout<<"filename "<<outname<<std::endl;
-    //rzx
+
     ImageType::Pointer inputImageShortSource;
     readITKImage( imageFileNameSource,inputImageShortSource);
 
@@ -618,20 +603,20 @@ int main(int argc,char *argv[])
 
     ImageType::SizeType size = inputImageShortSource->GetLargestPossibleRegion().GetSize();
 
-    // std::cout<<"image size is "<<size<<std::endl;
+    std::cout<<"image size is "<<size<<std::endl;
 
     ImageType::SpacingType spacingtarget;
     spacingtarget[0]=1;
     spacingtarget[1]=1;
 
-    // std::cout<<"input spacing source is "<<inputImageShortSource->GetSpacing()<<std::endl;
-    // std::cout<<"output spacing source is "<<inputImageShortTarget->GetSpacing()<<std::endl;
+    std::cout<<"input spacing source is "<<inputImageShortSource->GetSpacing()<<std::endl;
+    std::cout<<"output spacing source is "<<inputImageShortTarget->GetSpacing()<<std::endl;
 
     inputImageShortSource->SetSpacing(spacingtarget);
     inputImageShortTarget->SetSpacing(spacingtarget);
 
 
-    matchingTwoImages(outname,inputImageShortSource, inputImageShortTarget);
+    matchingTwoImages(inputImageShortSource, inputImageShortTarget);
 
 }
 
